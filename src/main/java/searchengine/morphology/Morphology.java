@@ -1,3 +1,5 @@
+package searchengine.morphology;
+
 import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 
@@ -9,5 +11,6 @@ public class Morphology {
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
         List<String> wordBaseForms = luceneMorph.getNormalForms("леса");
         wordBaseForms.forEach(System.out::println);
+
     }
 }
