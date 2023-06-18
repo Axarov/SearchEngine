@@ -1,19 +1,16 @@
 package searchengine.model;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@Data
 @Entity
-@Table(name = "page", indexes = {@Index(name = "path_list", columnList = "path")})
-@Setter
-@Getter
+@Table(name = "page", indexes = {@javax.persistence.Index(name = "path_list", columnList = "path")})
 @NoArgsConstructor
 public class Page implements Serializable {
 
@@ -23,7 +20,7 @@ public class Page implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "site_id", referencedColumnName = "id")
     private Site siteId;
-    @Column(length = 1000, columnDefinition = "VARCHAR(515)", nullable = false)
+    @Column(length = 2000, columnDefinition = "VARCHAR(515)", nullable = false)
     private String path;
 
     private int code;
@@ -32,7 +29,7 @@ public class Page implements Serializable {
 
 
     @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
-    private List<IndexSearch> index = new ArrayList<>();
+    private List<Index> index = new ArrayList<>();
 
     public Page(Site siteId, String path, int code, String content) {
         this.siteId = siteId;
@@ -40,33 +37,5 @@ public class Page implements Serializable {
         this.code = code;
         this.content = content;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Page that = (Page) o;
-        return id == that.id && code == that.code &&
-                siteId.equals(that.siteId) &&
-                path.equals(that.path) &&
-                content.equals(that.content) &&
-                index.equals(that.index);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, siteId, path, code, content, index);
-    }
-
-    @Override
-    public String toString() {
-        return "PageEntity{" +
-                "id=" + id +
-                ", siteId=" + siteId +
-                ", path='" + path + '\'' +
-                ", code=" + code +
-                ", content='" + content + '\'' +
-                ", index=" + index +
-                '}';
-    }
 }
+

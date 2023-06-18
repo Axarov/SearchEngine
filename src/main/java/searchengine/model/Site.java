@@ -1,19 +1,17 @@
 package searchengine.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
+@Data
 @Entity
-@Setter
-@Getter
 @Table(name = "site")
-public class Site {
+public class Site implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -32,36 +30,8 @@ public class Site {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "siteId", cascade = CascadeType.ALL)
-    protected List<Page> pageList = new ArrayList<>();
+    protected List<Page> pageEntityList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sitePageId", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "siteEntityId", cascade = CascadeType.ALL)
     protected List<Lemma> lemmaEntityList = new ArrayList<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Site that = (Site) o;
-        return id == that.id && status == that.status &&
-                statusTime.equals(that.statusTime) &&
-                Objects.equals(lastError, that.lastError) &&
-                url.equals(that.url) && name.equals(that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, status, statusTime, lastError, url, name);
-    }
-
-    @Override
-    public String toString() {
-        return "SitePage{" +
-                "id=" + id +
-                ", status=" + status +
-                ", statusTime=" + statusTime +
-                ", lastError='" + lastError + '\'' +
-                ", url='" + url + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
