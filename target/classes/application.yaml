@@ -3,7 +3,7 @@
 indexing-settings:
   sites:
 
-    - url: https://www.svetlovka.ru/
+    - url: https://www.svetlovka.ru
       name: Svetlovka
     - url: https://www.playback.ru
       name: PlayBack.Ru
