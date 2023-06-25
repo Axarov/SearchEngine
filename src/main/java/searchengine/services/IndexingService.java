@@ -1,7 +1,7 @@
 package searchengine.services;
 
 public interface IndexingService {
-    boolean urlIndexing(String url);
+    boolean performUrlIndexing(String url);
     void indexingAll();
     boolean stopIndexing();
     void removeSiteFromIndex(String url);

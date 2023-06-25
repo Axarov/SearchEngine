@@ -51,7 +51,7 @@ public class ApiController {
                 return new ResponseEntity<>(new FalseResponse(false, "Указанный сайт не найден в базе"), HttpStatus.BAD_REQUEST);
             }
             indexingService.removeSiteFromIndex(siteUrl);
-            indexingService.urlIndexing(siteUrl);
+            indexingService.performUrlIndexing(siteUrl);
             return new ResponseEntity<>(new TrueResponse(true), HttpStatus.OK);
         }
     }
@@ -66,7 +66,9 @@ public class ApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestParam(name = "query", required = false, defaultValue = "") String query, @RequestParam(name = "site", required = false, defaultValue = "") String site, @RequestParam(name = "offset", required = false, defaultValue = "0") int offset, @RequestParam(name = "limit", required = false, defaultValue = "20") int limit) {
+    public ResponseEntity<Object> search(@RequestParam(name = "query", required = false, defaultValue = "") String query,
+            @RequestParam(name = "site", required = false, defaultValue = "") String site, @RequestParam(name = "offset", required = false,
+            defaultValue = "0") int offset, @RequestParam(name = "limit", required = false, defaultValue = "20") int limit) {
         if (query.isEmpty()) {
             return new ResponseEntity<>(new FalseResponse(false, "Задан пустой поисковый запрос"), HttpStatus.BAD_REQUEST);
         } else {
@@ -90,7 +92,7 @@ public class ApiController {
         if (url.isEmpty()) {
             return new ResponseEntity<>(new FalseResponse(false, "Страница не указана"), HttpStatus.BAD_REQUEST);
         } else {
-            if (indexingService.urlIndexing(url)) {
+            if (indexingService.performUrlIndexing(url)) {
                 return new ResponseEntity<>(new TrueResponse(true), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new FalseResponse(false, "Указанная страница за пределами конфигурационного файла"), HttpStatus.BAD_REQUEST);

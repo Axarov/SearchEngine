@@ -33,8 +33,9 @@ public class IndexingServiceImpl implements IndexingService {
     private final SitesList sitesList;
 
     @Override
-    public boolean urlIndexing(String url) {
+    public boolean performUrlIndexing(String url) {
         if (urlCheck(url)) {
+            log.info("Start indexing site - " + url);
             executorService = Executors.newFixedThreadPool(PROCESSOR_CORE_COUNT);
             executorService.submit(new SiteIndexed(pageRepository, siteRepository, lemmaRepository, indexRepository,
                     lemmaParser, indexParser, url, sitesList));
@@ -49,7 +50,7 @@ public class IndexingServiceImpl implements IndexingService {
     @Override
     public void indexingAll() {
         if (isIndexingActive()) {
-            log.debug("Индексация уже запущена");
+            log.debug("Indexing already started");
         } else {
             List<Site> siteList = sitesList.getSites();
             executorService = Executors.newFixedThreadPool(PROCESSOR_CORE_COUNT);
@@ -57,6 +58,7 @@ public class IndexingServiceImpl implements IndexingService {
                 String url = site.getUrl();
                 searchengine.model.Site siteEntity = new searchengine.model.Site();
                 siteEntity.setName(site.getName());
+                log.info("Parsing site: " + site.getName());
                 executorService.submit(new SiteIndexed(pageRepository, siteRepository, lemmaRepository,
                         indexRepository, lemmaParser, indexParser, url, sitesList));
             }
@@ -67,9 +69,11 @@ public class IndexingServiceImpl implements IndexingService {
     @Override
     public boolean stopIndexing() {
         if (isIndexingActive()) {
+            log.info("Indexing was stopped");
             executorService.shutdownNow();
             return true;
         } else {
+            log.info("Indexing was not stopped because it was not started");
             return false;
         }
     }
@@ -100,7 +104,7 @@ public class IndexingServiceImpl implements IndexingService {
                 siteRepository, lemmaRepository, indexRepository, lemmaParser, indexParser, sitesList);
         if (urlCheck(url)) {
             siteRepository.deleteByUrl(url);
-            indexingService.urlIndexing(url);
+            indexingService.performUrlIndexing(url);
         }
     }
 }
